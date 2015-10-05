@@ -23,6 +23,13 @@ meta-engine basically has 3 (kinds of) directives.
 
 `@region` tags a block of code so that it can be used later using `@use`. 
 
+
+# Examples
+
+### Plain HTML Projects
+
+**header.html**
+
 ```html
 @region "common-header"
   <div class="header">
@@ -31,7 +38,10 @@ meta-engine basically has 3 (kinds of) directives.
   </div>
 ```
 
+**index.html**
+
 ```html
+@include './header.html'
 <html>
 <body>
   @use "common-header"
