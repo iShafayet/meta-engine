@@ -21,7 +21,30 @@ meta-engine basically has 3 (kinds of) directives.
 
 ### @region and @use
 
-`@region` tags a block of code so that it can be used later using `@use`. 
+`@region` tags a block of code so that it can be used later using `@use`.
+
+**declare a region**
+```coffee
+@region "a-name"
+```
+
+**declare a region and declare it as indentation sensitive**
+```coffee
+@region "a-name" indented
+```
+the `indented` option makes sure that whenever the region is used, the indentation is matched to the destination unless the destination has the option `as-is`.
+
+**use a region**
+```coffee
+@use "a-name"
+```
+indentation will be matched if the `@region` is `indented`
+
+**use a region and do not match indentation**
+```coffee
+@use "a-name" as-is
+```
+`as-is` has higher priority than `indented`
 
 
 # Examples
