@@ -3,7 +3,7 @@
 
 A language agnostic directive system and preprocessor.
 
-Offers great power and flexibility without much change in your build process.
+Offers great power and flexibility without much change in your build process. All of these are pre-compilation. So you do not add any runtime overhead.
 
 # Installation
 
@@ -15,12 +15,32 @@ Offers great power and flexibility without much change in your build process.
 
 meta-engine basically has 3 (kinds of) directives.
 
-1. `@region`
-2. `@use`
+1. `@region` and `@use`
+2. `@describe`
 3. `@include`
 
-there is also a sudo directive `@describe`
+### @region and @use
 
+`@region` tags a block of code so that it can be used later using `@use`. 
+
+```html
+@region "common-header"
+  <div class="header">
+    <div class="title">My Webpage</div>
+    <div class="slogan">For a better world</div>
+  </div>
+```
+
+```html
+<html>
+<body>
+  @use "common-header"
+  <div>
+    My Content Here
+  </div>
+</body>
+  
+```
 
 # Gulp
 
