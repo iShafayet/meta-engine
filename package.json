@@ -1,0 +1,35 @@
+{
+    "name": "meta-engine",
+    "version": "0.0.0",
+    "description": "A language agnostic directive system and preprocessor.",
+    "main": "index-runner.js",
+    "scripts": {
+        "test": "mocha --compilers coffee:coffee-script/register"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/iShafayet/meta-engine.git"
+    },
+    "keywords": [
+        "utility",
+        "meta",
+        "preprocessor",
+        "language",
+        "directive",
+        "nodejs"
+    ],
+    "author": "Sayem Shafayet <ishafayet@gmail.com> (http://ishafayet.me/)",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/iShafayet/meta-engine/issues"
+    },
+    "homepage": "https://github.com/iShafayet/meta-engine",
+    "dependencies": {
+        "coffee-script": "^1.10.0"
+    },
+    "devDependencies": {
+        "chai": "^3.3.0",
+        "mocha": "^2.3.3"
+    },
+    "private": false
+}
