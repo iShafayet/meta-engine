@@ -42,3 +42,17 @@ describe 'meta-engine', ->
         expect(fn({encoding:'unknown', somekey:'somevalue'})).to.deep.equal { encoding: 'unknown' , somekey:'somevalue', prefix: '@', postfix: '', contentProvider:null }
 
 
+    describe '#__validateContentProvider()', ->
+
+      fn = metaEngine1.__validateContentProvider
+
+      it 'existance', ->
+
+        expect(metaEngine1).to.have.property('__validateContentProvider').that.is.a('function')
+
+      it.skip 'input-output sets', ->
+        
+        # expect(fn()).to.deep.equal { encoding: 'utf8', prefix: '@', postfix: '', contentProvider:null }
+
+
+
