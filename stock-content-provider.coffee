@@ -7,7 +7,7 @@ class StockContentProvider
   constructor: (rootDir = './', encoding = 'utf8') ->
     
     unless fs.existsSync rootDir
-      throw new Error "#{rootDir} does not exist."
+      throw new Error "directory \"#{rootDir}\" does not exist."
 
     if not (encoding) or not (typeof encoding is 'string')
       encoding = 'utf8'
