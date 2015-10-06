@@ -1,5 +1,6 @@
 
 path = require 'path'
+fs = require 'fs'
 
 class StockContentProvider
 
