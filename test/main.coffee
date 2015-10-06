@@ -27,18 +27,18 @@ describe 'meta-engine', ->
 
       it 'input-output sets', ->
         
-        expect(fn()).to.deep.equal { encoding: 'utf8', prefix: '@', postfix: '' }
+        expect(fn()).to.deep.equal { encoding: 'utf8', prefix: '@', postfix: '', contentProvider:null }
 
-        expect(fn(null)).to.deep.equal { encoding: 'utf8', prefix: '@', postfix: '' }
+        expect(fn(null)).to.deep.equal { encoding: 'utf8', prefix: '@', postfix: '', contentProvider:null }
         
-        expect(fn({encoding:'utf8'})).to.deep.equal { encoding: 'utf8', prefix: '@', postfix: '' }
+        expect(fn({encoding:'utf8'})).to.deep.equal { encoding: 'utf8', prefix: '@', postfix: '', contentProvider:null }
 
-        expect(fn({encoding:'utf16'})).to.deep.equal { encoding: 'utf16', prefix: '@', postfix: '' }
+        expect(fn({encoding:'utf16'})).to.deep.equal { encoding: 'utf16', prefix: '@', postfix: '', contentProvider:null }
       
-        expect(fn({encoding:'unknown'})).to.deep.equal { encoding: 'unknown', prefix: '@', postfix: '' }
+        expect(fn({encoding:'unknown'})).to.deep.equal { encoding: 'unknown', prefix: '@', postfix: '', contentProvider:null }
 
-        expect(fn({encoding:null})).to.deep.equal { encoding: 'utf8', prefix: '@', postfix: '' }
+        expect(fn({encoding:null})).to.deep.equal { encoding: 'utf8', prefix: '@', postfix: '', contentProvider:null }
 
-        expect(fn({encoding:'unknown', somekey:'somevalue'})).to.deep.equal { encoding: 'unknown' , somekey:'somevalue', prefix: '@', postfix: ''}
+        expect(fn({encoding:'unknown', somekey:'somevalue'})).to.deep.equal { encoding: 'unknown' , somekey:'somevalue', prefix: '@', postfix: '', contentProvider:null }
 
 
