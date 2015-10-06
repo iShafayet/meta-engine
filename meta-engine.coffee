@@ -4,12 +4,14 @@ class MetaEngine
   optionMap: null
   contentProvider: null
 
-  constuctor: (optionMap)->
+  constructor: (optionMap = {})->
 
-    @optionMap = @__processOptionMap optionMap
+    @optionMap = optionMap = @__processOptionMap optionMap
 
     if optionMap.contentProvider
       @contentProvider = @__validateContentProvider optionMap.contentProvider
+
+
 
 
   setContentProvider: (contentProvider)->
@@ -54,6 +56,25 @@ class MetaEngine
     return optionMap
 
 
+  __ensureContentProvider: ->
+
+    unless @contentProvider
+      throw new Error "contentProvider is not assigned"
+
+
+  __processSync: (resourcePath)->
+
+    content = @contentProvider.getContentSync resourcePath
+
+    return content
+
+
+
+  processSync: (resourcePath)->
+
+    @__ensureContentProvider()
+
+    return @__processSync resourcePath
 
 
 
