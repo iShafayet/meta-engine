@@ -12,6 +12,10 @@ class MetaEngine
       @contentProvider = @__validateContentProvider optionMap.contentProvider
 
 
+  setContentProvider: (contentProvider)->
+    @contentProvider = @__validateContentProvider contentProvider
+
+
   __validateContentProvider: (contentProvider)->
 
     if not ('getContent' of contentProvider) or not (typeof contentProvider.getContent is 'function')
