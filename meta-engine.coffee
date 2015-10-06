@@ -1,4 +1,6 @@
 
+path = require 'path'
+
 class MetaEngine
 
   optionMap: null
@@ -10,8 +12,6 @@ class MetaEngine
 
     if optionMap.contentProvider
       @contentProvider = @__validateContentProvider optionMap.contentProvider
-
-
 
 
   setContentProvider: (contentProvider)->
@@ -50,6 +50,12 @@ class MetaEngine
     if not ('postfix' of optionMap) or not (typeof optionMap.postfix is 'string')
       optionMap.postfix = ''
 
+    if not ('indentCharacter' of optionMap) or not (typeof optionMap.indentCharacter is 'string')
+      optionMap.indentCharacter = '  '
+
+    if not ('linebreakCharacter' of optionMap) or not (typeof optionMap.linebreakCharacter is 'string')
+      optionMap.linebreakCharacter = '\n'
+
     if not ('contentProvider' of optionMap) or not (typeof optionMap.contentProvider is 'object')
       optionMap.contentProvider = null
 
@@ -61,20 +67,88 @@ class MetaEngine
     unless @contentProvider
       throw new Error "contentProvider is not assigned"
 
+  # ---------------------------------------------------------- Sync Version
 
-  __processSync: (resourcePath)->
+  __processSyncIncludeTag: (resourcePath, content)->
 
-    content = @contentProvider.getContentSync resourcePath
+    linebreakCharacter = @optionMap.linebreakCharacter
+
+    indentCharacter = @optionMap.indentCharacter
+
+    offset = 0
+    while (tagStartIndex = content.indexOf '@include', offset) > -1
+      offset = tagStartIndex + 1
+      
+      # figure out indent level
+      if tagStartIndex is 0
+        indentLevel = 0
+        tagLineStartIndex = 0
+      else
+        caseContent = content.slice 0, tagStartIndex
+        lastLineEnd = caseContent.lastIndexOf linebreakCharacter
+        tagLineStartIndex = lastLineEnd + 1 # NOTE: Also covers the scenario when lastLineEnd is -1
+        indentationString = content.slice tagLineStartIndex, tagStartIndex
+        indentLevel = 0
+        while (indentationString.indexOf indentCharacter, (indentCharacter.length * indentLevel)) > -1
+          indentLevel += 1
+
+      # extract tag
+      tagLineEndIndex = (content.indexOf linebreakCharacter, offset)
+      if tagLineEndIndex is -1
+        tagLineEndIndex = content.length - 1
+      tag = (content.slice tagStartIndex, tagLineEndIndex)
+
+      # extract name
+      indexQuote1 = tag.indexOf '"', '@include'.length
+      if indexQuote1 is -1
+        throw new Error 'Expected Double Quote'
+      indexQuote2 = tag.indexOf '"', indexQuote1 + 1
+      if indexQuote2 is -1
+        throw new Error 'Expected Double Quote'
+      name = tag.slice indexQuote1 + 1, indexQuote2
+
+      # extract other parameters
+      if ((tag.slice indexQuote2 + 1, tag.length).indexOf 'isolated') > -1
+        isolated = true
+      else
+        isolated = false
+
+      # extract subContent (recursive)
+      subResourcePath = path.join (path.dirname resourcePath), name
+      subContent = @__processSync subResourcePath, isolated
+
+      # replace
+      left = content.slice 0, tagLineStartIndex
+      middle = subContent
+      right = content.slice tagLineEndIndex, content.length
+      content = left + middle + right
 
     return content
 
+
+  __processSyncRegionTagAndIncludeTag: (resourcePath, content)->
+
+    return content
+
+
+  __processSync: (resourcePath, isolated = false)->
+
+    content = @contentProvider.getContentSync resourcePath
+
+    content = @__processSyncIncludeTag resourcePath, content
+
+    if isolated
+
+      content = @__processSyncRegionTagAndIncludeTag resourcePath, content
+
+    return content
 
 
   processSync: (resourcePath)->
 
     @__ensureContentProvider()
 
-    return @__processSync resourcePath
+    return @__processSync resourcePath, true
 
 
 
