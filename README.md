@@ -86,7 +86,7 @@ All the `@include`s are resolved before the `@region`s are parsed. this can be o
     My Content Here
   </div>
 </body>
-  
+</html>
 ```
 
 # Gulp
