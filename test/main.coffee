@@ -55,4 +55,18 @@ describe 'meta-engine', ->
         # expect(fn()).to.deep.equal { encoding: 'utf8', prefix: '@', postfix: '', contentProvider:null }
 
 
+    describe '#setContentProvider()', ->
+
+      fn = metaEngine1.setContentProvider
+
+      it 'existance', ->
+
+        expect(metaEngine1).to.have.property('setContentProvider').that.is.a('function')
+
+      it.skip 'input-output sets', ->
+        
+        # expect(fn()).to.deep.equal { encoding: 'utf8', prefix: '@', postfix: '', contentProvider:null }
+
+
+
 
