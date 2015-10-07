@@ -275,12 +275,16 @@ class MetaEngine
       right = content.slice tagLineEndIndex, content.length
       content = left + middle + right
 
-
-
     return content
 
 
-  __processSync: (resourcePath, isolated = false)->
+  __trim: (content)->
+    content = content.replace /^\s*/g, ''
+    content = content.replace /\s*$/g, ''
+    return content
+
+
+  __processSync: (resourcePath, isolated = false, trim = true)->
 
     content = @contentProvider.getContentSync resourcePath
 
@@ -291,6 +295,10 @@ class MetaEngine
       [ regionMap, content ] = @__processSyncRegionTag resourcePath, content
 
       content = @__processSyncUseTag resourcePath, content, regionMap
+
+      if trim
+
+        content = @__trim content
 
     return content
 
