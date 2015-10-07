@@ -4,6 +4,7 @@ path = require 'path'
 class MetaEngine
 
   optionMap: null
+
   contentProvider: null
 
   constructor: (optionMap = {})->
@@ -310,7 +311,6 @@ class MetaEngine
     @__ensureContentProvider()
 
     return @__processSync resourcePath, true
-
 
 
 @MetaEngine = MetaEngine
