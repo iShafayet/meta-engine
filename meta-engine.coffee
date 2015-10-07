@@ -126,9 +126,90 @@ class MetaEngine
     return content
 
 
-  __processSyncRegionTagAndIncludeTag: (resourcePath, content)->
+  __processSyncRegionTag: (resourcePath, content)->
 
-    return content
+    linebreakCharacter = @optionMap.linebreakCharacter
+
+    indentCharacter = @optionMap.indentCharacter
+
+    regionMap = {}
+
+    offset = 0
+    while (tagStartIndex = content.indexOf '@region', offset) > -1
+      offset = tagStartIndex + 1
+      
+      # figure out indent level
+      if tagStartIndex is 0
+        indentLevel = 0
+        tagLineStartIndex = 0
+      else
+        caseContent = content.slice 0, tagStartIndex
+        lastLineEnd = caseContent.lastIndexOf linebreakCharacter
+        tagLineStartIndex = lastLineEnd + 1 # NOTE: Also covers the scenario when lastLineEnd is -1
+        indentationString = content.slice tagLineStartIndex, tagStartIndex
+        indentLevel = 0
+        while (indentationString.indexOf indentCharacter, (indentCharacter.length * indentLevel)) > -1
+          indentLevel += 1
+
+      # extract tag
+      tagLineEndIndex = (content.indexOf linebreakCharacter, offset)
+      if tagLineEndIndex is -1
+        tagLineEndIndex = content.length - 1
+      tag = (content.slice tagStartIndex, tagLineEndIndex)
+
+      # extract name
+      indexQuote1 = tag.indexOf '"', '@region'.length
+      if indexQuote1 is -1
+        throw new Error 'Expected Double Quote'
+      indexQuote2 = tag.indexOf '"', indexQuote1 + 1
+      if indexQuote2 is -1
+        throw new Error 'Expected Double Quote'
+      name = tag.slice indexQuote1 + 1, indexQuote2
+
+      # extract other parameters
+      if ((tag.slice indexQuote2 + 1, tag.length).indexOf 'indented') > -1
+        indented = true
+      else
+        indented = false
+
+      # check for duplication
+      if name of regionMap
+        throw new Error "Duplicate Region #{name}"
+
+      # locate the region
+      localOffset = offset
+      endOfBlockString = linebreakCharacter + (indentCharacter for i in [0...indentLevel]).join ''
+      inBlockString = linebreakCharacter + (indentCharacter for i in [0...(indentLevel + 1)]).join ''
+      loop
+        endOfBlockStringIndex = content.indexOf endOfBlockString, localOffset
+        inBlockStringIndex = content.indexOf inBlockString, localOffset
+        break if endOfBlockStringIndex is -1
+        break unless endOfBlockStringIndex is inBlockStringIndex
+        localOffset = endOfBlockStringIndex + 1
+      endOfBlockStringIndex = content.length if endOfBlockStringIndex is -1
+
+      # extract the region
+      regionContent = (content.slice (tagLineEndIndex+1), endOfBlockStringIndex)
+      regionContent = (linebreakCharacter + regionContent).split inBlockString
+      regionContent = (regionContent.join endOfBlockString).slice 1
+
+      # replace
+      left = content.slice 0, tagLineStartIndex
+      middle = ''
+      right = content.slice (endOfBlockStringIndex + 1), content.length
+      content = left + middle + right
+
+      # add
+      regionMap[name] = {
+        resourcePath: resourcePath,
+        regionContent: regionContent
+        indented: indented
+        indentLevel: indentLevel
+      }
+
+    return [ regionMap, content ]
+
+
 
 
   __processSync: (resourcePath, isolated = false)->
@@ -139,7 +220,9 @@ class MetaEngine
 
     if isolated
 
-      content = @__processSyncRegionTagAndIncludeTag resourcePath, content
+      [ regionMap, content ] = @__processSyncRegionTag resourcePath, content
+
+      content = @__processSyncUseTag resourcePath, content, regionMap
 
     return content
 
