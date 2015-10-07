@@ -210,6 +210,74 @@ class MetaEngine
     return [ regionMap, content ]
 
 
+  __processSyncUseTag: (resourcePath, content, regionMap)->
+
+    linebreakCharacter = @optionMap.linebreakCharacter
+
+    indentCharacter = @optionMap.indentCharacter
+
+    offset = 0
+    while (tagStartIndex = content.indexOf '@use', offset) > -1
+      offset = tagStartIndex + 1
+      
+      # figure out indent level
+      if tagStartIndex is 0
+        indentLevel = 0
+        tagLineStartIndex = 0
+      else
+        caseContent = content.slice 0, tagStartIndex
+        lastLineEnd = caseContent.lastIndexOf linebreakCharacter
+        tagLineStartIndex = lastLineEnd + 1 # NOTE: Also covers the scenario when lastLineEnd is -1
+        indentationString = content.slice tagLineStartIndex, tagStartIndex
+        indentLevel = 0
+        while (indentationString.indexOf indentCharacter, (indentCharacter.length * indentLevel)) > -1
+          indentLevel += 1
+
+      # extract tag
+      tagLineEndIndex = (content.indexOf linebreakCharacter, offset)
+      if tagLineEndIndex is -1
+        tagLineEndIndex = content.length - 1
+      tag = (content.slice tagStartIndex, tagLineEndIndex)
+
+      # extract name
+      indexQuote1 = tag.indexOf '"', '@use'.length
+      if indexQuote1 is -1
+        throw new Error 'Expected Double Quote'
+      indexQuote2 = tag.indexOf '"', indexQuote1 + 1
+      if indexQuote2 is -1
+        throw new Error 'Expected Double Quote'
+      name = tag.slice indexQuote1 + 1, indexQuote2
+
+      # extract other parameters
+      if ((tag.slice indexQuote2 + 1, tag.length).indexOf 'as-is') > -1
+        asIs = true
+      else
+        asIs = false
+
+      # check for duplication
+      unless name of regionMap
+        throw new Error "Unknown Region #{name}"
+      region = regionMap[name]
+
+      # decide whether to match indentation
+      matchIndent = if region.indented and not asIs then true else false
+
+      # match indent
+      if matchIndent
+        'TODO'
+        regionContent = region.regionContent
+      else
+        regionContent = region.regionContent
+
+      # replace
+      left = content.slice 0, tagLineStartIndex
+      middle = regionContent
+      right = content.slice tagLineEndIndex, content.length
+      content = left + middle + right
+
+
+
+    return content
 
 
   __processSync: (resourcePath, isolated = false)->
