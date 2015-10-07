@@ -15,7 +15,7 @@ describe 'Scenario 1', ->
 
       me = new MetaEngine { contentProvider: cp, encoding: 'utf8' }
 
-      console.log '|'+(me.processSync 'index.html')+'|'
+      console.log '-----|'+(me.processSync 'index.html')+'|-----'
 
 
 
