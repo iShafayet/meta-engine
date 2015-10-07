@@ -310,7 +310,9 @@ class MetaEngine
 
     @__ensureContentProvider()
 
-    return @__processSync resourcePath, true
+    content = @__processSync resourcePath, true
+
+    @contentProvider.setContentSync resourcePath, content
 
 
 @MetaEngine = MetaEngine
