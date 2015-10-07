@@ -11,11 +11,28 @@ describe 'Scenario 1', ->
 
     it.only 'test', ->
 
-      cp = new StockContentProvider './test/scenario-1', 'utf8'
+      class TestContentProvider extends StockContentProvider
 
-      me = new MetaEngine { contentProvider: cp, encoding: 'utf8' }
+        getContentSync: (relativePath)->
+          super ('/input/'+relativePath)
 
-      console.log '-----|'+(me.processSync 'index.html')+'|-----'
+        setContentSync: (relativePath, content)->
+          super ('/output/'+relativePath), content
+
+      cp = new TestContentProvider './test/scenario-1', 'utf8'
+
+      me = new MetaEngine { 
+        contentProvider: cp, 
+        encoding: 'utf8' 
+      }
+
+      me.processSync 'index.html'      
+
+      output = fs.readFileSync './test/scenario-1/output/index.html', {encoding:'utf8'}
+
+      expected = fs.readFileSync './test/scenario-1/expected-output/index.html', {encoding:'utf8'}
+
+      expect(output).to.equal(expected)
 
 
 
