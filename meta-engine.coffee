@@ -264,8 +264,10 @@ class MetaEngine
 
       # match indent
       if matchIndent
-        'TODO'
+        fillerString = (indentCharacter for i in [0...indentLevel]).join ''
         regionContent = region.regionContent
+        regionContent = regionContent.split linebreakCharacter
+        regionContent = fillerString + regionContent.join linebreakCharacter + fillerString
       else
         regionContent = region.regionContent
 
