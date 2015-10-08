@@ -22,7 +22,7 @@ meta-engine (as of now) has 2 kinds of directives.
 
 `@region` tags a block of code so that it can be reused somewhere else using `@use`.
 
-**declare a region**
+**<u>declare a region</u>**
 ```coffee
 @region "a-name"
 ```
