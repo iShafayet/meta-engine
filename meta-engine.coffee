@@ -102,10 +102,10 @@ class MetaEngine
       # extract name
       indexQuote1 = tag.indexOf '"', '@include'.length
       if indexQuote1 is -1
-        throw new Error 'Expected Double Quote'
+        throw new Error "Expected Double Quote in \"#{resourcePath}\""
       indexQuote2 = tag.indexOf '"', indexQuote1 + 1
       if indexQuote2 is -1
-        throw new Error 'Expected Double Quote'
+        throw new Error "Expected Double Quote in \"#{resourcePath}\""
       name = tag.slice indexQuote1 + 1, indexQuote2
 
       # extract other parameters
@@ -161,10 +161,10 @@ class MetaEngine
       # extract name
       indexQuote1 = tag.indexOf '"', '@region'.length
       if indexQuote1 is -1
-        throw new Error 'Expected Double Quote'
+        throw new Error "Expected Double Quote in \"#{resourcePath}\""
       indexQuote2 = tag.indexOf '"', indexQuote1 + 1
       if indexQuote2 is -1
-        throw new Error 'Expected Double Quote'
+        throw new Error "Expected Double Quote in \"#{resourcePath}\""
       name = tag.slice indexQuote1 + 1, indexQuote2
 
       # extract other parameters
@@ -175,7 +175,8 @@ class MetaEngine
 
       # check for duplication
       if name of regionMap
-        throw new Error "Duplicate Region #{name}"
+        err = new Error "Duplicate Region \"#{name}\" in \"#{resourcePath}\""
+        throw err
 
       # locate the region
       localOffset = offset
@@ -243,10 +244,10 @@ class MetaEngine
       # extract name
       indexQuote1 = tag.indexOf '"', '@use'.length
       if indexQuote1 is -1
-        throw new Error 'Expected Double Quote'
+        throw new Error "Expected Double Quote in \"#{resourcePath}\""
       indexQuote2 = tag.indexOf '"', indexQuote1 + 1
       if indexQuote2 is -1
-        throw new Error 'Expected Double Quote'
+        throw new Error "Expected Double Quote in \"#{resourcePath}\""
       name = tag.slice indexQuote1 + 1, indexQuote2
 
       # extract other parameters
@@ -259,13 +260,13 @@ class MetaEngine
       if ((tag.slice indexQuote2 + 1, tag.length).indexOf 'match-indent') > -1
         matchIndent = true
         if asIs
-          throw new Error "match-indent and as-is may not be used in the same @use tag"
+          throw new Error "match-indent and as-is may not be used in the same @use tag in \"#{resourcePath}\""
       else
         matchIndent = false
 
       # check for duplication
       unless name of regionMap
-        throw new Error "Unknown Region #{name}"
+        throw new Error "Unknown Region \"#{name}\" in \"#{resourcePath}\""
       region = regionMap[name]
 
       # decide whether to match indentation
