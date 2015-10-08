@@ -255,13 +255,21 @@ class MetaEngine
       else
         asIs = false
 
+      # extract other parameters
+      if ((tag.slice indexQuote2 + 1, tag.length).indexOf 'match-indent') > -1
+        matchIndent = true
+        if asIs
+          throw new Error "match-indent and as-is may not be used in the same @use tag"
+      else
+        matchIndent = false
+
       # check for duplication
       unless name of regionMap
         throw new Error "Unknown Region #{name}"
       region = regionMap[name]
 
       # decide whether to match indentation
-      matchIndent = if region.indented and not asIs then true else false
+      matchIndent = if matchIndent or (region.indented and not asIs) then true else false
 
       # match indent
       if matchIndent
