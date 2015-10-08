@@ -3,7 +3,7 @@
 
 A language agnostic directive system and preprocessor.
 
-Offers great power and flexibility without much change in your build process. All of these are pre-compilation. So you do not add any runtime overhead.
+Offers great power and flexibility without much change in your build process. All the processing happen inside your build process. So there is no runtime overhead at all.
 
 # Installation
 
@@ -13,26 +13,20 @@ Offers great power and flexibility without much change in your build process. Al
 
 # Quick Overview
 
-meta-engine basically has 3 (kinds of) directives.
+meta-engine (as of now) has 2 kinds of directives.
 
 1. `@region` and `@use`
 2. `@include`
-3. `@describe`
 
 ### @region and @use
 
-`@region` tags a block of code so that it can be used later using `@use`.
+`@region` tags a block of code so that it can be reused somewhere else using `@use`.
 
 **declare a region**
 ```coffee
 @region "a-name"
 ```
-
-or declare a region and declare it as indentation sensitive
-```coffee
-@region "a-name" indented
-```
-the `indented` option makes sure that whenever the region is used, the indentation is matched to the destination unless the destination has the option `as-is`.
+supported option(s): `indented`
 
 **use a region**
 ```coffee
