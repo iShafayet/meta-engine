@@ -5,6 +5,10 @@ A language agnostic directive system and preprocessor.
 
 Offers great power and flexibility without much change in your build process. All the processing happen inside your build process. So there is no runtime overhead at all.
 
+# Features
+
+* Language agnostic.
+
 # Installation
 
 ```bash
@@ -42,7 +46,6 @@ Include a file. the contents of that file will be inserted where the @include ta
 ```coffee
 @include "filepath"
 ```
-
 supported option(s): `isolated`
 
 # Examples
@@ -65,9 +68,23 @@ supported option(s): `isolated`
 @include './header.html'
 <html>
 <body>
-  @use "common-header"
+  @use "common-header" match-indent
   <div>
-    My Content Here
+    Welcome to my page
+  </div>
+</body>
+</html>
+```
+
+**about.html**
+
+```html
+@include './header.html'
+<html>
+<body>
+  @use "common-header" match-indent
+  <div>
+    A place to rant about your great website.
   </div>
 </body>
 </html>
