@@ -22,7 +22,7 @@ meta-engine (as of now) has 2 kinds of directives.
 
 `@region` tags a block of code so that it can be reused somewhere else using `@use`.
 
-**<u>declare a region</u>**
+**declare a region**
 ```coffee
 @region "a-name"
 ```
@@ -32,28 +32,18 @@ supported option(s): `indented`
 ```coffee
 @use "a-name"
 ```
-indentation will be matched if the `@region` is `indented`
-
-or use a region and do not match indentation
-```coffee
-@use "a-name" as-is
-```
-`as-is` has higher priority than `indented`
-
+supported option(s): `match-indent`, `as-is`
 
 ### @include
 
 Include a file. the contents of that file will be inserted where the @include tag is.
 
+**including a file using it's relative path**
 ```coffee
 @include "filepath"
 ```
 
-Filepath is relative to the current file. `.`, `..`, `/` are supported. quotations are mandatory.
-
-Unlike `@use`, `@include` is always *as-is*. included content is never altered to match destination. If you need that feature, just wrap the source inside a `@region`.
-
-All the `@include`s are resolved before the `@region`s are parsed. this can be overriden by using the option `isolated` which makes sure the `@region`s and `@use`es are evaluated (and flattened) before returning to the parent file.
+supported option(s): `isolated`
 
 # Examples
 
@@ -82,6 +72,18 @@ All the `@include`s are resolved before the `@region`s are parsed. this can be o
 </body>
 </html>
 ```
+
+# Full Usage
+
+See [Full Usage](docs/full-usage.md) before you jump in.
+
+# Programmatic API
+
+See [Programmatic API](docs/api.md) in order to incorporate it into your custom build process. And if you are using **gulp**, we got you covered. Scroll below.
+
+# Command Line Tool
+
+See [Command Line Help](docs/command-line.md) to learn how to access the full potential of the command line tool. It even walks a directory for you.
 
 # Gulp
 
