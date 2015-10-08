@@ -90,6 +90,37 @@ describe 'Scenarios', ->
 
 
 
+  describe 'scenario-4-comment-insertion', ->
+
+    it 'test', ->
+
+      class TestContentProvider extends StockContentProvider
+
+        getContentSync: (relativePath)->
+          super ('/input/'+relativePath)
+
+        setContentSync: (relativePath, content)->
+          super ('/output/'+relativePath), content
+
+      cp = new TestContentProvider './test/scenario-4-comment-insertion', 'utf8'
+
+      me = new MetaEngine { 
+        contentProvider: cp, 
+        encoding: 'utf8' 
+        insertComments: true
+      }
+
+      me.processSync 'index.html'      
+
+      output = fs.readFileSync './test/scenario-4-comment-insertion/output/index.html', {encoding:'utf8'}
+
+      expected = fs.readFileSync './test/scenario-4-comment-insertion/expected-output/index.html', {encoding:'utf8'}
+
+      expect(output).to.equal(expected)
+
+
+
+
 
 
 

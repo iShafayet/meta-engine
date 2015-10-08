@@ -27,7 +27,18 @@ describe 'class MetaEngine', ->
 
       it 'input-output sets', ->
 
-        defaultOutput = { encoding: 'utf8', prefix: '@', postfix: '', contentProvider:null, indentCharacter: '  ', linebreakCharacter: '\n' }
+        defaultOutput = { 
+          encoding: 'utf8', 
+          prefix: '@', 
+          postfix: '', 
+          contentProvider:null, 
+          indentCharacter: '  ', 
+          linebreakCharacter: '\n' 
+          commentPostfix: " -->"
+          commentPrefix: "<!-- "
+          insertComments: false
+
+        }
         
         expect(fn()).to.deep.equal defaultOutput
 

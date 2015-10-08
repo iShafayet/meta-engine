@@ -60,6 +60,16 @@ class MetaEngine
     if not ('contentProvider' of optionMap) or not (typeof optionMap.contentProvider is 'object')
       optionMap.contentProvider = null
 
+    if not ('insertComments' of optionMap) or not (typeof optionMap.insertComments is 'boolean')
+      optionMap.insertComments = false
+
+    if not ('commentPrefix' of optionMap) or not (typeof optionMap.commentPrefix is 'string')
+      optionMap.commentPrefix = '<!-- '
+
+    if not ('commentPostfix' of optionMap) or not (typeof optionMap.commentPostfix is 'string')
+      optionMap.commentPostfix = ' -->'
+
+
     return optionMap
 
 
@@ -117,6 +127,12 @@ class MetaEngine
       # extract subContent (recursive)
       subResourcePath = path.join (path.dirname resourcePath), name
       subContent = @__processSync subResourcePath, isolated
+
+      # insert comments
+      if @optionMap.insertComments
+        beginComments = @optionMap.commentPrefix + "start of inclusion from \"#{subResourcePath}\" into \"#{subResourcePath}\"" + @optionMap.commentPostfix
+        endComments = @optionMap.commentPrefix + "end of inclusion \"#{subResourcePath}\"" + @optionMap.commentPostfix
+        subContent = beginComments + subContent + endComments
 
       # replace
       left = content.slice 0, tagLineStartIndex
@@ -269,17 +285,24 @@ class MetaEngine
         throw new Error "Unknown Region \"#{name}\" in \"#{resourcePath}\""
       region = regionMap[name]
 
+      regionContent = region.regionContent
+
+      # insert comments
+      if @optionMap.insertComments
+        fillerString = (indentCharacter for i in [0...indentLevel]).join ''
+        beginComments = @optionMap.commentPrefix + "start of use of \"#{name}\"" + @optionMap.commentPostfix
+        endComments = @optionMap.commentPrefix + "end of use" + @optionMap.commentPostfix
+        regionContent = beginComments + '\n' + regionContent + '\n' + endComments
+
       # decide whether to match indentation
       matchIndent = if matchIndent or (region.indented and not asIs) then true else false
 
       # match indent
       if matchIndent
         fillerString = (indentCharacter for i in [0...indentLevel]).join ''
-        regionContent = region.regionContent
+        # regionContent = region.regionContent
         regionContent = regionContent.split linebreakCharacter
         regionContent = fillerString + regionContent.join linebreakCharacter + fillerString
-      else
-        regionContent = region.regionContent
 
       # replace
       left = content.slice 0, tagLineStartIndex
