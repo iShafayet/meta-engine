@@ -7,7 +7,13 @@ Offers great power and flexibility without much change in your build process. Al
 
 # Features
 
-* Language agnostic.
+* Language agnostic. Should practically work for all modern languages.
+* Great support for indent/whitespace sensitive languages (i.e. CoffeeScript).
+* Fills in only the blanks. Not trying to reinvent the wheel or replace template engines.
+* Exposes a Programmatic API.
+* Command Line tool comes alongside.
+* Very well documented.
+
 
 # Installation
 
