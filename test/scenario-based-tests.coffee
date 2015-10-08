@@ -54,13 +54,42 @@ describe 'Scenarios', ->
         encoding: 'utf8' 
       }
 
+      fn = ->
+        me.processSync 'index.html'
+
+      expect(fn).to.throw('Duplicate Region "common-footer" in "index.html"')
+
+
+
+  describe 'Scenario 3', ->
+
+    it 'test', ->
+
+      class TestContentProvider extends StockContentProvider
+
+        getContentSync: (relativePath)->
+          super ('/input/'+relativePath)
+
+        setContentSync: (relativePath, content)->
+          super ('/output/'+relativePath), content
+
+      cp = new TestContentProvider './test/scenario-3', 'utf8'
+
+      me = new MetaEngine { 
+        contentProvider: cp, 
+        encoding: 'utf8' 
+      }
+
       me.processSync 'index.html'      
 
-      output = fs.readFileSync './test/scenario-2/output/index.html', {encoding:'utf8'}
+      output = fs.readFileSync './test/scenario-3/output/index.html', {encoding:'utf8'}
 
-      expected = fs.readFileSync './test/scenario-2/expected-output/index.html', {encoding:'utf8'}
+      expected = fs.readFileSync './test/scenario-3/expected-output/index.html', {encoding:'utf8'}
 
       expect(output).to.equal(expected)
+
+
+
 
 
 
