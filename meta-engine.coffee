@@ -131,7 +131,7 @@ class MetaEngine
     res = @__extractCommonOptions tagString, ['isolated'], resourcePath, content, tagStartIndex, linebreakCharacter, indentCharacter
     return [ tagStartIndex, res ]
 
-  __insertSyncTagContents: ( resourcePath, subResourcePath, subContent, content, tagLineStartIndex, tagLineEndIndex ) ->
+  __insertIncludeTagContents: ( resourcePath, subResourcePath, subContent, content, tagLineStartIndex, tagLineEndIndex ) ->
 
     # insert comments
     if @optionMap.insertComments
@@ -148,7 +148,26 @@ class MetaEngine
     return content
 
 
-  # ---------------------------------------------------------- Sync Version
+  __processIncludeTag: (resourcePath, content, cbfn, offset = 0)->
+
+    [ tagStartIndex, res ] = @__extractNextIncludeTag resourcePath, content, offset
+    if tagStartIndex is -1
+      return cbfn null, content
+
+    [ tagLineStartIndex, indentLevel, tagLineEndIndex, tag, primaryQuotedString, otherParameterMap ] = res
+    offset = tagStartIndex + 1
+    
+    subResourcePath = path.join (path.dirname resourcePath), primaryQuotedString
+    
+    # extract subContent (recursive)
+    @__process subResourcePath, otherParameterMap.isolated, true, (err, subContent)=>
+
+      return cbfn err if err
+
+      content = @__insertIncludeTagContents resourcePath, subResourcePath, subContent, content, tagLineStartIndex, tagLineEndIndex
+      
+      @__processIncludeTag resourcePath, content, cbfn, offset
+
 
   __processSyncIncludeTag: (resourcePath, content)->
 
@@ -159,11 +178,12 @@ class MetaEngine
       [ tagLineStartIndex, indentLevel, tagLineEndIndex, tag, primaryQuotedString, otherParameterMap ] = res
       offset = tagStartIndex + 1
       
-      # extract subContent (recursive)
       subResourcePath = path.join (path.dirname resourcePath), primaryQuotedString
+
+      # extract subContent (recursive)
       subContent = @__processSync subResourcePath, otherParameterMap.isolated
 
-      content = @__insertSyncTagContents resourcePath, subResourcePath, subContent, content, tagLineStartIndex, tagLineEndIndex
+      content = @__insertIncludeTagContents resourcePath, subResourcePath, subContent, content, tagLineStartIndex, tagLineEndIndex
 
     return content
 
@@ -366,7 +386,7 @@ class MetaEngine
 
       return cbfn err if err
 
-      @__processIncludeTab resourcePath, content, (err, content)=>
+      @__processIncludeTag resourcePath, content, (err, content)=>
 
         return cbfn err if err
 
@@ -401,11 +421,11 @@ class MetaEngine
 
     @__process resourcePath, true, true, (err, content)=>
 
-      return cbfn, err if err
+      return cbfn err if err
 
       @contentProvider.setContent resourcePath, content, (err)=>
 
-        return cbfn, err
+        return cbfn err
 
 
 
