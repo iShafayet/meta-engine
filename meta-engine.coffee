@@ -78,67 +78,92 @@ class MetaEngine
     unless @contentProvider
       throw new Error "contentProvider is not assigned"
 
+  # ---------------------------------------------------------- Actual Processing
+
+  __extractCommonOptions: (tagString, otherParameterList, resourcePath, content, tagStartIndex, linebreakCharacter, indentCharacter)->
+
+    # [ tagLineStartIndex, indentLevel ]
+    if tagStartIndex is 0
+      indentLevel = 0
+      tagLineStartIndex = 0
+    else
+      caseContent = content.slice 0, tagStartIndex
+      lastLineEnd = caseContent.lastIndexOf linebreakCharacter
+      tagLineStartIndex = lastLineEnd + 1 # NOTE: Also covers the scenario when lastLineEnd is -1
+      indentationString = content.slice tagLineStartIndex, tagStartIndex
+      indentLevel = 0
+      while (indentationString.indexOf indentCharacter, (indentCharacter.length * indentLevel)) > -1
+        indentLevel += 1
+
+    # [ tagLineEndIndex, tag ]
+    tagLineEndIndex = (content.indexOf linebreakCharacter, tagStartIndex)
+    if tagLineEndIndex is -1
+      tagLineEndIndex = content.length - 1
+    tag = (content.slice tagStartIndex, tagLineEndIndex)
+
+    # [ primaryQuotedString ]
+    indexQuote1 = tag.indexOf '"', tagString.length
+    if indexQuote1 is -1
+      throw new Error "Expected Double Quote in \"#{resourcePath}\""
+    indexQuote2 = tag.indexOf '"', indexQuote1 + 1
+    if indexQuote2 is -1
+      throw new Error "Expected Double Quote in \"#{resourcePath}\""
+    primaryQuotedString = name = tag.slice indexQuote1 + 1, indexQuote2
+
+    # [ otherParameterMap ]
+    otherParameterMap = {}
+    for parameter in otherParameterList
+      if (tag.indexOf parameter, indexQuote2 + 1) > -1
+        otherParameterMap[parameter] = true
+      else
+        otherParameterMap[parameter] = false
+
+    return [ tagLineStartIndex, indentLevel, tagLineEndIndex, tag, primaryQuotedString, otherParameterMap ]
+
+  __extractNextIncludeTag: (resourcePath, content, offset)->
+
+    tagString = @optionMap.prefix + 'include' + @optionMap.postfix
+    { linebreakCharacter, indentCharacter } = @optionMap
+
+    tagStartIndex = content.indexOf tagString, offset
+    return [ -1, null ] if tagStartIndex is -1
+
+    res = @__extractCommonOptions tagString, ['isolated'], resourcePath, content, tagStartIndex, linebreakCharacter, indentCharacter
+    return [ tagStartIndex, res ]
+
+  __insertSyncTagContents: ( resourcePath, subResourcePath, subContent, content, tagLineStartIndex, tagLineEndIndex ) ->
+
+    # insert comments
+    if @optionMap.insertComments
+      beginComments = @optionMap.commentPrefix + "start of inclusion from \"#{subResourcePath}\" into \"#{resourcePath}\"" + @optionMap.commentPostfix
+      endComments = @optionMap.commentPrefix + "end of inclusion \"#{subResourcePath}\"" + @optionMap.commentPostfix
+      subContent = beginComments + subContent + endComments
+
+    # replace
+    left = content.slice 0, tagLineStartIndex
+    middle = subContent
+    right = content.slice tagLineEndIndex, content.length
+    content = left + middle + right
+
+    return content
+
+
   # ---------------------------------------------------------- Sync Version
 
   __processSyncIncludeTag: (resourcePath, content)->
 
-    linebreakCharacter = @optionMap.linebreakCharacter
-
-    indentCharacter = @optionMap.indentCharacter
-
     offset = 0
-    while (tagStartIndex = content.indexOf '@include', offset) > -1
+    loop
+      [ tagStartIndex, res ] = @__extractNextIncludeTag resourcePath, content, offset
+      break if tagStartIndex is -1
+      [ tagLineStartIndex, indentLevel, tagLineEndIndex, tag, primaryQuotedString, otherParameterMap ] = res
       offset = tagStartIndex + 1
       
-      # figure out indent level
-      if tagStartIndex is 0
-        indentLevel = 0
-        tagLineStartIndex = 0
-      else
-        caseContent = content.slice 0, tagStartIndex
-        lastLineEnd = caseContent.lastIndexOf linebreakCharacter
-        tagLineStartIndex = lastLineEnd + 1 # NOTE: Also covers the scenario when lastLineEnd is -1
-        indentationString = content.slice tagLineStartIndex, tagStartIndex
-        indentLevel = 0
-        while (indentationString.indexOf indentCharacter, (indentCharacter.length * indentLevel)) > -1
-          indentLevel += 1
-
-      # extract tag
-      tagLineEndIndex = (content.indexOf linebreakCharacter, offset)
-      if tagLineEndIndex is -1
-        tagLineEndIndex = content.length - 1
-      tag = (content.slice tagStartIndex, tagLineEndIndex)
-
-      # extract name
-      indexQuote1 = tag.indexOf '"', '@include'.length
-      if indexQuote1 is -1
-        throw new Error "Expected Double Quote in \"#{resourcePath}\""
-      indexQuote2 = tag.indexOf '"', indexQuote1 + 1
-      if indexQuote2 is -1
-        throw new Error "Expected Double Quote in \"#{resourcePath}\""
-      name = tag.slice indexQuote1 + 1, indexQuote2
-
-      # extract other parameters
-      if ((tag.slice indexQuote2 + 1, tag.length).indexOf 'isolated') > -1
-        isolated = true
-      else
-        isolated = false
-
       # extract subContent (recursive)
-      subResourcePath = path.join (path.dirname resourcePath), name
-      subContent = @__processSync subResourcePath, isolated
+      subResourcePath = path.join (path.dirname resourcePath), primaryQuotedString
+      subContent = @__processSync subResourcePath, otherParameterMap.isolated
 
-      # insert comments
-      if @optionMap.insertComments
-        beginComments = @optionMap.commentPrefix + "start of inclusion from \"#{subResourcePath}\" into \"#{subResourcePath}\"" + @optionMap.commentPostfix
-        endComments = @optionMap.commentPrefix + "end of inclusion \"#{subResourcePath}\"" + @optionMap.commentPostfix
-        subContent = beginComments + subContent + endComments
-
-      # replace
-      left = content.slice 0, tagLineStartIndex
-      middle = subContent
-      right = content.slice tagLineEndIndex, content.length
-      content = left + middle + right
+      content = @__insertSyncTagContents resourcePath, subResourcePath, subContent, content, tagLineStartIndex, tagLineEndIndex
 
     return content
 
