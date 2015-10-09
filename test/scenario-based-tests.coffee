@@ -123,6 +123,53 @@ describe 'Scenarios', ->
 
 
 
+  describe 'scenario-4-comment-insertion (Async)', ->
+
+    it 'test', (done)->
+
+      class TestContentProvider extends StockContentProvider
+
+        getContentSync: (relativePath)->
+          super ('/input/'+relativePath)
+
+        setContentSync: (relativePath, content)->
+          super ('/output/'+relativePath), content
+
+        getContent: (relativePath, cbfn)->
+          try 
+            return cbfn null, @getContentSync relativePath 
+          catch ex
+            return cbfn ex
+
+        setContent: (relativePath, content, cbfn)->
+          try 
+            return cbfn null, @setContentSync relativePath, content
+          catch ex
+            return cbfn ex
+
+      cp = new TestContentProvider './test/scenario-4-comment-insertion', 'utf8'
+
+      me = new MetaEngine { 
+        contentProvider: cp, 
+        encoding: 'utf8' 
+        insertComments: true
+      }
+
+      me.process 'index.html', (output)=>
+
+        output = fs.readFileSync './test/scenario-4-comment-insertion/output/index.html', {encoding:'utf8'}
+
+        expected = fs.readFileSync './test/scenario-4-comment-insertion/expected-output/index.html', {encoding:'utf8'}
+
+        expect(output).to.equal(expected)
+
+        done()
+
+
+
+
+
+
 
 
 
