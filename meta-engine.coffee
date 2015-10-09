@@ -356,9 +356,7 @@ class MetaEngine
 
       content = @__processUseTag resourcePath, content, regionMap
 
-      if trim
-
-        content = @__trim content
+      content = @__trim content if trim
 
     return content
 
@@ -370,6 +368,19 @@ class MetaEngine
     content = @__processSync resourcePath, true
 
     @contentProvider.setContentSync resourcePath, content
+
+  process: (resourcePath, cbfn)->
+
+    @__ensureContentProvider()
+
+    @__process resourcePath, true, true, (err, content)=>
+
+      return cbfn, err if err
+
+      @contentProvider.setContent resourcePath, content, (err)=>
+
+        return cbfn, err
+
 
 
 @MetaEngine = MetaEngine
