@@ -168,7 +168,7 @@ class MetaEngine
     return content
 
 
-  __processSyncRegionTag: (resourcePath, content)->
+  __processRegionTag: (resourcePath, content)->
 
     linebreakCharacter = @optionMap.linebreakCharacter
 
@@ -352,7 +352,7 @@ class MetaEngine
 
     if isolated
 
-      [ regionMap, content ] = @__processSyncRegionTag resourcePath, content
+      [ regionMap, content ] = @__processRegionTag resourcePath, content
 
       content = @__processSyncUseTag resourcePath, content, regionMap
 
