@@ -360,6 +360,32 @@ class MetaEngine
 
     return content
 
+  __process: (resourcePath, isolated = false, trim = true, cbfn)->
+
+    @contentProvider.getContent resourcePath, (err, content)=>
+
+      return cbfn err if err
+
+      @__processIncludeTab resourcePath, content, (err, content)=>
+
+        return cbfn err if err
+
+        if isolated
+
+          try
+
+            [ regionMap, content ] = @__processRegionTag resourcePath, content
+
+            content = @__processUseTag resourcePath, content, regionMap
+
+            content = @__trim content if trim
+
+          catch ex
+            
+            return cbfn ex
+
+        return cbfn null, content
+
 
   processSync: (resourcePath)->
 
