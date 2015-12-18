@@ -72,7 +72,7 @@ supported option(s): `isolated`
 **index.html**
 
 ```html
-@include './header.html'
+@include "./header.html"
 <html>
 <body>
   @use "common-header"
@@ -86,7 +86,7 @@ supported option(s): `isolated`
 **about.html**
 
 ```html
-@include './header.html'
+@include "./header.html"
 <html>
 <body>
   @use "common-header"

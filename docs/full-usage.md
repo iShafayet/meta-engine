@@ -123,16 +123,48 @@ results would be, even if the `region` had the `indented` parameter.
 
 the `include` tag can be used to import the contents of another file into current file.
 
-### `include`d files share namespace.
+**header.html**
+
+```html
+@region "common-header" indented
+  <div class="header">
+    <div class="title">My Webpage</div>
+    <div class="slogan">For a better world</div>
+  </div>
+```
+
+**index.html**
+
+```html
+@include "./header.html"
+<html>
+<body>
+  @use "common-header"
+  <div>
+    Welcome to my page
+  </div>
+</body>
+</html>
+```
+
+### `include`d files share namespace
 
 All the `region`s of the parent are available in the child and vice-versa.
 
-### `include`s may be forced to work in `isolated` namespace
+### `include`s may be forced to work in `isolated` namespaces
 
-Using the `isolated` paramer, an `include`d file can be forced to be *flattened* (as in all the `use` tags processed) before it's contents are included in the parent.
+Using the `isolated` paramer, an `include`d file can be forced to be *flattened* (as in all the `use` tags processed) before it's contents are included in the parent. It's regions will not be exported to the parent if using the `isolated` parameter.
 
 ### `include` can be infinitely nested.
 
-There is virtually no limit imposed by the developer.
+There is virtually no limit imposed by the developer on the nesting.
+
+### `include` can introduce cycles
+
+This will be fixed at a later time. For now, one just need to be careful not to use cyclic includes.
+
+### the path for the `include` tag is arbitary.
+
+It is upto the `ContentProvider` (discussed in the programmatic apis) to resolve the path to a content. It can be anything that the `ContentProvider` supports.
 
 
