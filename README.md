@@ -113,6 +113,12 @@ See [metae](https://github.com/ishafayet/metae) to learn more about how to acces
 
 See [gulp-meta-engine](https://github.com/ishafayet/gulp-meta-engine)
 
+# Syntax Highlighting
+
+meta-engine has a very small set of instructions. It can be easily added to the definition fo another language. Syntax Highlighting for atom and sublime-text are provided in the following repository.
+
+See [meta-engine-syntax-highlighting](https://github.com/ishafayet/meta-engine-syntax-highlighting)
+
 # Testing
 
 You need [mocha](https://github.com/mochajs/mocha)
