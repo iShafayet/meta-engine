@@ -121,4 +121,18 @@ results would be, even if the `region` had the `indented` parameter.
 
 # @include
 
+the `include` tag can be used to import the contents of another file into current file.
+
+### `include`d files share namespace.
+
+All the `region`s of the parent are available in the child and vice-versa.
+
+### `include`s may be forced to work in `isolated` namespace
+
+Using the `isolated` paramer, an `include`d file can be forced to be *flattened* (as in all the `use` tags processed) before it's contents are included in the parent.
+
+### `include` can be infinitely nested.
+
+There is virtually no limit imposed by the developer.
+
 
