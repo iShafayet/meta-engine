@@ -37,7 +37,7 @@ describe 'class MetaEngine', ->
           commentPostfix: " -->"
           commentPrefix: "<!-- "
           insertComments: false
-
+          presetRegions: {}
         }
         
         expect(fn()).to.deep.equal defaultOutput

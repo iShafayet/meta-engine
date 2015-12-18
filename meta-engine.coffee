@@ -17,6 +17,7 @@ class MetaEngine
     insertComments: false
     commentPrefix: '<!-- '
     commentPostfix: ' -->'
+    presetRegions: {}
 
   constructor: (optionMap = {})->
 
@@ -80,6 +81,8 @@ class MetaEngine
     if not ('commentPostfix' of optionMap) or not (typeof optionMap.commentPostfix is 'string')
       optionMap.commentPostfix = MetaEngine.defaults.commentPostfix
 
+    if not ('presetRegions' of optionMap) or not (typeof optionMap.presetRegions is 'object')
+      optionMap.presetRegions = MetaEngine.defaults.presetRegions
 
     return optionMap
 
