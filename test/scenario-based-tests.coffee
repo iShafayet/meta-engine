@@ -7,7 +7,7 @@ fs = require 'fs'
 
 describe 'Scenarios', ->
 
-  describe 'Scenario 1', ->
+  describe 'Scenario 1: @include, @region (indented), @use', ->
 
     it 'test', ->
 
@@ -35,7 +35,7 @@ describe 'Scenarios', ->
       expect(output).to.equal(expected)
 
 
-  describe 'Scenario 2', ->
+  describe 'Scenario 2: @include, @region (overriding another @region), @use (match-indent)', ->
 
     it 'test', ->
 
@@ -61,7 +61,7 @@ describe 'Scenarios', ->
 
 
 
-  describe 'Scenario 3', ->
+  describe 'Scenario 3: @include, @region (without indented), @use (match-indent)', ->
 
     it 'test', ->
 
@@ -90,7 +90,7 @@ describe 'Scenarios', ->
 
 
 
-  describe 'scenario-4-comment-insertion', ->
+  describe 'Scenario 4: Comment Insertion', ->
 
     it 'test', ->
 
