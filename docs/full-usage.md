@@ -70,7 +70,7 @@ In the previous example, if the `region` did not have the `indented` tag, the re
 ```
 
 ### `use` accepts the `match-indent` parameter
-In the previous example, if the `region` did not have the `indented` tag, BUT the use tag had the `match-indent` parameter,
+In the previous example, if the `region` did not have the `indented` tag BUT the `use` tag had the `match-indent` parameter,
 
 ```html
 <body>
@@ -118,3 +118,7 @@ results would be, even if the `region` had the `indented` parameter.
   </div>
 </body>
 ```
+
+# @include
+
+
