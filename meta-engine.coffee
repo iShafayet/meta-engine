@@ -7,6 +7,17 @@ class MetaEngine
 
   contentProvider: null
 
+  @defaults = 
+    encoding: 'utf8'
+    prefix: '@'
+    postfix: ''
+    indentCharacter: '  '
+    linebreakCharacter: '\n'
+    contentProvider: null
+    insertComments: false
+    commentPrefix: '<!-- '
+    commentPostfix: ' -->'
+
   constructor: (optionMap = {})->
 
     @optionMap = optionMap = @__processOptionMap optionMap
