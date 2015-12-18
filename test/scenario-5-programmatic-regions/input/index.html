@@ -1,0 +1,15 @@
+@include "./header.html"
+@include "./footer.html"
+<html>
+<title>
+  Test Application v
+  @use "app-version"
+</title>
+<body>
+  @use "common-header" match-indent
+  <div>
+    My Content Here
+  </div>
+  @use "common-footer" match-indent
+</body>
+</html>

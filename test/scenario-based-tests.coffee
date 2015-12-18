@@ -119,10 +119,6 @@ describe 'Scenarios', ->
       expect(output).to.equal(expected)
 
 
-
-
-
-
   describe 'Scenario 4a: Comment Insertion (Async)', ->
 
     it 'test', (done)->
@@ -167,6 +163,40 @@ describe 'Scenarios', ->
 
 
 
+
+  describe 'Scenario 5: Programmatic @region tags', ->
+
+    it 'test', ->
+
+      class TestContentProvider extends StockContentProvider
+
+        getContentSync: (relativePath)->
+          super ('/input/'+relativePath)
+
+        setContentSync: (relativePath, content)->
+          super ('/output/'+relativePath), content
+
+      cp = new TestContentProvider './test/scenario-5-programmatic-regions', 'utf8'
+
+      me = new MetaEngine { 
+        contentProvider: cp, 
+        encoding: 'utf8' 
+        insertComments: true
+        presetRegions:
+          'app-version':
+            resourcePath: 'global',
+            regionContent: '2'
+            indented: false
+            indentLevel: 0
+      }
+
+      me.processSync 'index.html'      
+
+      output = fs.readFileSync './test/scenario-5-programmatic-regions/output/index.html', {encoding:'utf8'}
+
+      expected = fs.readFileSync './test/scenario-5-programmatic-regions/expected-output/index.html', {encoding:'utf8'}
+
+      expect(output).to.equal(expected)
 
 
 
