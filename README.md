@@ -12,13 +12,8 @@ Offers great power and flexibility without much change in your build process. Al
 * Fills in only the blanks. Not trying to reinvent the wheel or replace template engines.
 * Exposes a Programmatic API.
 * Command Line tool comes alongside.
+* Classically written and easily extensible.
 * Very well documented.
-
-
-
-
-
-
 
 # Installation
 
@@ -61,12 +56,12 @@ supported option(s): `isolated`
 
 # Examples
 
-### Plain HTML Projects
+### Plain HTML Project
 
 **header.html**
 
 ```html
-@region "common-header"
+@region "common-header" indented
   <div class="header">
     <div class="title">My Webpage</div>
     <div class="slogan">For a better world</div>
@@ -79,7 +74,7 @@ supported option(s): `isolated`
 @include './header.html'
 <html>
 <body>
-  @use "common-header" match-indent
+  @use "common-header"
   <div>
     Welcome to my page
   </div>
@@ -93,7 +88,7 @@ supported option(s): `isolated`
 @include './header.html'
 <html>
 <body>
-  @use "common-header" match-indent
+  @use "common-header"
   <div>
     A place to rant about your great website.
   </div>
@@ -111,7 +106,7 @@ See [Programmatic API](docs/api.md) in order to incorporate it into your custom 
 
 # Command Line Tool
 
-See [Command Line Help](docs/command-line.md) to learn how to access the full potential of the command line tool. It even walks a directory for you.
+See [metae](https://github.com/ishafayet/metae) to learn more about how to access the full potential of the command line tool. It even walks a directory for you.
 
 # Gulp
 
@@ -126,7 +121,7 @@ You need [mocha](https://github.com/mochajs/mocha)
 
 # Contributing
 
-We actively check for issues even for the least used repositories (unless explicitly abandoned). All of our opensource repositories are being used in commercial projects by teamO4 or bbsenterprise. So, it is very likely that we will sort out important issues not long after they are posted.
+We actively check for issues even for the least used repositories (unless explicitly abandoned). All of our opensource repositories are being used in commercial projects by [SoftEvolve](https://softevolve.com), [teamO4](https://teamo4.com), [BDEMR](https://bdemr.com) or [BBS Enterprise](https://bbsenterprise.com). So, it is very likely that we will sort out important issues not long after they are posted.
 
 Please create a github issue if you find a bug or have a feature request.
 
