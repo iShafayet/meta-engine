@@ -23,3 +23,39 @@ describe 'class StockContentProvider', ->
         
         # expect(fn()).to.deep.equal { encoding: 'utf8', prefix: '@', postfix: '', contentProvider:null }
 
+
+    describe '#setContent()', ->
+
+      fn = stockContentProvider1.setContent
+
+      it 'existance', ->
+
+        expect(stockContentProvider1).to.have.property('setContent').that.is.a('function')
+
+      it.skip 'input-output sets', ->
+        
+        # expect(fn()).to.deep.equal { encoding: 'utf8', prefix: '@', postfix: '', contentProvider:null }
+
+    describe '#getContentSync()', ->
+
+      fn = stockContentProvider1.getContentSync
+
+      it 'existance', ->
+
+        expect(stockContentProvider1).to.have.property('getContentSync').that.is.a('function')
+
+      it.skip 'input-output sets', ->
+        
+        # expect(fn()).to.deep.equal { encoding: 'utf8', prefix: '@', postfix: '', contentProvider:null }
+
+    describe '#setContentSync()', ->
+
+      fn = stockContentProvider1.setContentSync
+
+      it 'existance', ->
+
+        expect(stockContentProvider1).to.have.property('setContentSync').that.is.a('function')
+
+      it.skip 'input-output sets', ->
+        
+        # expect(fn()).to.deep.equal { encoding: 'utf8', prefix: '@', postfix: '', contentProvider:null }
