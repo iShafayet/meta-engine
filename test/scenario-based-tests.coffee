@@ -123,7 +123,7 @@ describe 'Scenarios', ->
 
 
 
-  describe 'scenario-4-comment-insertion (Async)', ->
+  describe 'Scenario 4a: Comment Insertion (Async)', ->
 
     it 'test', (done)->
 
