@@ -54,31 +54,31 @@ class MetaEngine
       optionMap = {}
 
     if not ('encoding' of optionMap) or not (typeof optionMap.encoding is 'string')
-      optionMap.encoding = 'utf8'
+      optionMap.encoding = MetaEngine.defaults.encoding
 
     if not ('prefix' of optionMap) or not (typeof optionMap.prefix is 'string')
-      optionMap.prefix = '@'
+      optionMap.prefix = MetaEngine.defaults.prefix
 
     if not ('postfix' of optionMap) or not (typeof optionMap.postfix is 'string')
-      optionMap.postfix = ''
+      optionMap.postfix = MetaEngine.defaults.postfix
 
     if not ('indentCharacter' of optionMap) or not (typeof optionMap.indentCharacter is 'string')
-      optionMap.indentCharacter = '  '
+      optionMap.indentCharacter = MetaEngine.defaults.indentCharacter
 
     if not ('linebreakCharacter' of optionMap) or not (typeof optionMap.linebreakCharacter is 'string')
-      optionMap.linebreakCharacter = '\n'
+      optionMap.linebreakCharacter = MetaEngine.defaults.linebreakCharacter
 
     if not ('contentProvider' of optionMap) or not (typeof optionMap.contentProvider is 'object')
-      optionMap.contentProvider = null
+      optionMap.contentProvider = MetaEngine.defaults.contentProvider
 
     if not ('insertComments' of optionMap) or not (typeof optionMap.insertComments is 'boolean')
-      optionMap.insertComments = false
+      optionMap.insertComments = MetaEngine.defaults.insertComments
 
     if not ('commentPrefix' of optionMap) or not (typeof optionMap.commentPrefix is 'string')
-      optionMap.commentPrefix = '<!-- '
+      optionMap.commentPrefix = MetaEngine.defaults.commentPrefix
 
     if not ('commentPostfix' of optionMap) or not (typeof optionMap.commentPostfix is 'string')
-      optionMap.commentPostfix = ' -->'
+      optionMap.commentPostfix = MetaEngine.defaults.commentPostfix
 
 
     return optionMap
