@@ -14,6 +14,7 @@ Offers great power and flexibility without much change in your build process. Al
 * Command Line tool comes alongside.
 * Classically written and easily extensible.
 * Very well documented.
+* Not hardcoded to use the `fs` module. Can be used with absolutely any sort of data source, not just files.
 
 # Installation
 
