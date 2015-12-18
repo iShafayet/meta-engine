@@ -385,6 +385,10 @@ class MetaEngine
 
       [ regionMap, content ] = @__processRegionTag resourcePath, content
 
+      if @optionMap.presetRegions
+        for name, region of @optionMap.presetRegions
+          regionMap[name] = region
+
       content = @__processUseTag resourcePath, content, regionMap
 
       content = @__trim content if trim
@@ -406,6 +410,10 @@ class MetaEngine
           try
 
             [ regionMap, content ] = @__processRegionTag resourcePath, content
+
+            if @optionMap.presetRegions
+              for name, region of @optionMap.presetRegions
+                regionMap[name] = region
 
             content = @__processUseTag resourcePath, content, regionMap
 
